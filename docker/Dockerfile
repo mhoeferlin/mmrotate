@@ -31,9 +31,11 @@ RUN pip install "yapf==0.40.1" "numpy<2.0" "albumentations==1.3.1"
 RUN apt update
 RUN apt install -y tmux silversearcher-ag nano vim
 RUN pip install tensorboard
-RUN git clone --recursive -b main https://github.com/open-mmlab/mmdeploy.git
+# ATTENTION: We need to build in 1.x (not building under main) and the switch branch to main (nor running deployment successfully under 1.x)
+RUN git clone --recursive -b 1.x https://github.com/open-mmlab/mmdeploy.git
 WORKDIR /mmrotate/mmdeploy
 RUN python3 tools/scripts/build_ubuntu_x64_ort.py
+RUN git checkout main
 ENV PYTHONPATH="/mmrotate/mmdeploy/build/lib:$PYTHONPATH"
 ENV LD_LIBRARY_PATH="/mmrotate/mmdeploy-dep/onnxruntime-linux-x64-1.8.1/lib/:$LD_LIBRARY_PATH"
 RUN pip install onnxruntime
